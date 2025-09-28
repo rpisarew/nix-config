@@ -15,6 +15,8 @@
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
+  networking.nameservers = [ "1.1.1.1" "1.0.0.1" ];
+
   time.timeZone = "Europe/Berlin";
 
   # Kernel & hardware defaults
@@ -41,6 +43,7 @@
     wget
     starship
     wezterm
+    # spotify
   ];
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
@@ -114,11 +117,6 @@
 
   # Install firefox.
   programs.firefox.enable = true;
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
-  users.users.root.initialPassword = "root";
 
   users.users = {
     # Admin
