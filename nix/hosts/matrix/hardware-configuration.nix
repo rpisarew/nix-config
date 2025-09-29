@@ -9,17 +9,30 @@
     ];
 
   boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
-  boot.initrd.kernelModules = [ "amdgpu" "nouveau" ];
+  boot.initrd.kernelModules = [ "nvidia" ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/b2aaaba4-c2b7-4af8-a4e6-a2f975a7b980";
-      fsType = "ext4";
+    { device = "/dev/disk/by-uuid/61a990ce-10fd-41c3-8800-37f27b99d2db";
+      fsType = "btrfs";
+      options = [ "compress=zstd" "subvol=root" ];
+    };
+
+  fileSystems."/home" =
+    { device = "/dev/disk/by-uuid/61a990ce-10fd-41c3-8800-37f27b99d2db";
+      fsType = "btrfs";
+      options = [ "compress=zstd" "subvol=home" ];
+    };
+
+  fileSystems."/nix" =
+    { device = "/dev/disk/by-uuid/61a990ce-10fd-41c3-8800-37f27b99d2db";
+      fsType = "btrfs";
+      options = [ "compress=zstd" "noatime" "subvol=nix" ];
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/141E-D3CF";
+    { device = "/dev/disk/by-uuid/12CE-A600";
       fsType = "vfat";
       options = [ "fmask=0022" "dmask=0022" ];
     };

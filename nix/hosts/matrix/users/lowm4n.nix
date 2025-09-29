@@ -1,39 +1,73 @@
-{ pkgs, ... }:
+{ inputs, pkgs, perSystem, ... }:
+let
+  system = pkgs.stdenv.hostPlatform.system;
+  pkgsUnstable = inputs.nixpkgs-unstable.legacyPackages.${system};
+in
 {
   # Home Manager basics
-  home.stateVersion = "24.11"; # match your HM release
+  home.stateVersion = "25.05"; # match your HM release
 
-  # Terminal app: Alacritty
-  programs.alacritty = {
+  xdg.configFile."hypr/hyprland.conf".source = "${inputs.dotfiles}/.config/hypr/hyprland.conf";
+  home.file.".wezterm.lua".source = "${inputs.dotfiles}/.wezterm.lua";
+
+  # Declarative cursor config that updates GTK & X11
+  home.pointerCursor = {
+    name = "Bibata-Modern-Classic";  # or "Adwaita"
+    package = pkgs.bibata-cursors;
+    size = 24;
+    gtk.enable = true;  # writes gtk settings
+    x11.enable = true;  # sets X cursor symlink
+  };
+
+  # System-wide “prefer dark” for GNOME (and apps that read it)
+  dconf.settings."org/gnome/desktop/interface" = {
+    color-scheme = "prefer-dark";   # GNOME 42+ dark mode flag
+    gtk-theme    = "Adwaita-dark";  # optional: keep the theme name aligned
+  };
+
+  gtk = {
     enable = true;
-    # Example settings (Alacritty 0.13+ uses TOML; HM writes the right format)
-    settings = {
-      window = { opacity = 0.96; };
-      font = { size = 12.0; };
-      cursor = { style = "Beam"; };
+    theme = {
+      name = "Adwaita-dark";
+      package = pkgs.gnome-themes-extra;
     };
+  };
+
+  qt = {
+    enable = true;
+    platformTheme.name = "gtk";
+    style.name = "kvantum";
   };
 
   # Shell / prompt
   programs.fish.enable = true;
+  programs.bash = {
+    enable = true;
+    # Runs for interactive bash
+    initExtra = ''
+      if [[ $- == *i* ]] && [[ -z "$FISH_VERSION" ]]; then
+        exec ${pkgs.fish}/bin/fish -l
+      fi
+    '';
+  };
   programs.starship.enable = true;
 
-  # Useful CLI apps (user-scoped)
-  home.packages = with pkgs; [ ripgrep fd bat ];
+  home.packages =
+    (with pkgs; [
+      bibata-cursors
+      ripgrep
+      fd
+      bat
+    ])
+    ++
+    (with pkgsUnstable; [
+      firefox
+    ]);
 
   # Git defaults
   programs.git = {
     enable = true;
     userName = "Foo Bar";
     userEmail = "foo@bar.com";
-  };
-
-  # SSH client config (optional tweaks)
-  programs.ssh = {
-    enable = true;
-    matchBlocks."*".extraOptions = {
-      ServerAliveInterval = "30";
-      ServerAliveCountMax = "3";
-    };
   };
 }
