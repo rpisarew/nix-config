@@ -4,15 +4,15 @@
   home.stateVersion = "24.11"; # match your HM release
 
   # Terminal app: Alacritty
-  programs.alacritty = {
-    enable = true;
-    # Example settings (Alacritty 0.13+ uses TOML; HM writes the right format)
-    settings = {
-      window = { opacity = 0.96; };
-      font = { size = 12.0; };
-      cursor = { style = "Beam"; };
-    };
-  };
+  # programs.alacritty = {
+  #   enable = true;
+  #   # Example settings (Alacritty 0.13+ uses TOML; HM writes the right format)
+  #   settings = {
+  #     window = { opacity = 0.96; };
+  #     font = { size = 12.0; };
+  #     cursor = { style = "Beam"; };
+  #   };
+  # };
 
   # Shell / prompt
   programs.fish.enable = true;

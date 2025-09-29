@@ -1,8 +1,11 @@
-{ flake, inputs, perSystem, pkgs, ... }:
+{ config, flake, inputs, perSystem, pkgs, ... }:
 {
+  nixpkgs.config.allowUnfree = true;
+  
   imports = [
     ./hardware-configuration.nix
-    # bring in the nixos-vscode-server module
+    flake.modules.nixos.docker
+    flake.modules.nixos.ssh
     inputs.vscode-server.nixosModules.default
   ];
 
@@ -19,11 +22,16 @@
 
   time.timeZone = "Europe/Berlin";
 
+  fonts.packages = with pkgs; [
+    nerd-fonts.fira-mono
+    nerd-fonts.fira-code
+  ];
+
   # Kernel & hardware defaults
   system.stateVersion = "24.11"; # set to your installed release
 
   # Packages available system-wide (keep this small; prefer Home Manager for apps)
-  environment.systemPackages = with perSystem.nixpkgs; [
+  environment.systemPackages = with pkgs; [
     bashInteractive
     coreutils
     gnugrep
@@ -43,10 +51,20 @@
     wget
     starship
     wezterm
-    # spotify
+    zellij
+
+    spotify
+    discord
+    vscode
+
+    pkgs.kitty # required for the default Hyprland config
   ];
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
+
+  programs.hyprland.enable = true; # enable Hyprland
+  # Optional, hint Electron apps to use Wayland:
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
   # Enable the VS Code server helper
   services.vscode-server.enable = true;
@@ -65,6 +83,48 @@
     LC_TELEPHONE = "de_DE.UTF-8";
     LC_TIME = "de_DE.UTF-8";
   };
+
+
+  # Enable OpenGL
+  hardware.graphics = {
+    enable = true;
+  };
+
+  # Load nvidia driver for Xorg and Wayland
+  services.xserver.videoDrivers = ["nvidia"];
+
+  hardware.nvidia = {
+
+    # Modesetting is required.
+    modesetting.enable = true;
+
+    # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
+    # Enable this if you have graphical corruption issues or application crashes after waking
+    # up from sleep. This fixes it by saving the entire VRAM memory to /tmp/ instead 
+    # of just the bare essentials.
+    powerManagement.enable = false;
+
+    # Fine-grained power management. Turns off GPU when not in use.
+    # Experimental and only works on modern Nvidia GPUs (Turing or newer).
+    powerManagement.finegrained = false;
+
+    # Use the NVidia open source kernel module (not to be confused with the
+    # independent third-party "nouveau" open source driver).
+    # Support is limited to the Turing and later architectures. Full list of 
+    # supported GPUs is at: 
+    # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus 
+    # Only available from driver 515.43.04+
+    open = false;
+
+    # Enable the Nvidia settings menu,
+	# accessible via `nvidia-settings`.
+    nvidiaSettings = true;
+
+    # Optionally, you may need to select the appropriate driver version for your specific GPU.
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
+  };
+
+
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
@@ -95,35 +155,22 @@
     #media-session.enable = true;
   };
 
-  # OpenSSH (server)
-  services.openssh = {
-    enable = true;
-    ports = [ 22 ];
-    # secure defaults
-    settings = {
-      PermitRootLogin = "no";
-      PasswordAuthentication = false;
-      PubkeyAuthentication = true;
-      KbdInteractiveAuthentication = false;
-      X11Forwarding = false;
-    };
-  };
-
-  # Optional: firewall (22 open)
-  networking.firewall = {
-    enable = true;
-    allowedTCPPorts = [ 22 ];
-  };
-
   # Install firefox.
   programs.firefox.enable = true;
+
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+    localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
+  };
 
   users.users = {
     # Admin
     lowm4n = {
       isNormalUser = true;
       description = "LowM4N Admin";
-      extraGroups = ["wheel" "networkmanager"];
+      extraGroups = ["docker" "wheel" "networkmanager"];
       # shell = pkgs.fish;
       shell = pkgs.bashInteractive;
       hashedPassword = "$y$j9T$zKVMZna.IIvgengXVjppm.$ZnAjitNKQssZQzuyKX413Jct2bVpRuqeHZBUAmgYy31"; # or set to "!" to lock password

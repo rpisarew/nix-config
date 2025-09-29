@@ -4,6 +4,7 @@
   # Add all your dependencies here
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
+
     blueprint.url = "github:numtide/blueprint";
     blueprint.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -25,6 +26,5 @@
       inherit inputs;
       prefix = "nix/";
       systems = [ "aarch64-linux" "x86_64-linux" ];
-      nixpkgs.config.allowUnfree = true;
     };
 }
