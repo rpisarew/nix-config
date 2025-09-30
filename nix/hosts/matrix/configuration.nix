@@ -62,6 +62,8 @@
     libnotify
 
     rofi
+
+    wl-clipboard
   ];
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
@@ -163,6 +165,44 @@
   #   layout = "us";
   #   variant = "";
   # };
+
+  # mac like keybinds
+  services.keyd = {
+    enable = true;
+
+    keyboards.default = {
+      ids = [ "*" ];  # required; matches all keyboards
+
+      settings = {
+        # Super (aka "meta") held:
+        meta = {
+          c = "C-c";  # copy
+          v = "C-v";  # paste
+
+          # optional mac-like extras:
+          x = "C-x";  # cut
+          z = "C-z";  # undo
+          a = "C-a";  # select all
+          s = "C-s";  # save
+          t = "C-t";  # new tab
+        };
+
+        # Optional: while holding Super+Shift, use terminal-friendly shortcuts too
+        "meta+shift" = {
+          c = "C-S-c"; # many terminals copy with Ctrl+Shift+C
+          v = "C-S-v"; # many terminals paste with Ctrl+Shift+V
+        };
+      };
+    };
+  };
+
+  # (Optional but recommended on some systems for palm-rejection quirk with keyd’s virtual keyboard)
+  # environment.etc."libinput/local-overrides.quirks".text = ''
+  #   [Serial Keyboards]
+  #   MatchUdevType=keyboard
+  #   MatchName=keyd virtual keyboard
+  #   AttrKeyboardIntegration=internal
+  # '';
 
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
