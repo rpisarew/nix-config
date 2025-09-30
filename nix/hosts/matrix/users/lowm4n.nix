@@ -3,19 +3,31 @@
   # Home Manager basics
   home.stateVersion = "24.11"; # match your HM release
 
-  # Terminal app: Alacritty
-  # programs.alacritty = {
-  #   enable = true;
-  #   # Example settings (Alacritty 0.13+ uses TOML; HM writes the right format)
-  #   settings = {
-  #     window = { opacity = 0.96; };
-  #     font = { size = 12.0; };
-  #     cursor = { style = "Beam"; };
-  #   };
-  # };
+  gtk = {
+    enable = true;
+    theme = {
+      name = "Adwaita-dark";
+      package = pkgs.gnome-themes-extra;
+    };
+  };
+
+  qt = {
+    enable = true;
+    platformTheme = "gtk";
+    style.name = "kvantum";
+  };
 
   # Shell / prompt
   programs.fish.enable = true;
+  programs.bash = {
+    enable = true;
+    # Runs for interactive bash
+    initExtra = ''
+      if [[ $- == *i* ]] && [[ -z "$FISH_VERSION" ]]; then
+        exec ${pkgs.fish}/bin/fish -l
+      fi
+    '';
+  };
   programs.starship.enable = true;
 
   # Useful CLI apps (user-scoped)

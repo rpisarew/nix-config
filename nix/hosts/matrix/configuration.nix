@@ -32,7 +32,6 @@
 
   # Packages available system-wide (keep this small; prefer Home Manager for apps)
   environment.systemPackages = with pkgs; [
-    bashInteractive
     coreutils
     gnugrep
     gnutar
@@ -58,13 +57,14 @@
     vscode
 
     pkgs.kitty # required for the default Hyprland config
+
+    pkgs.dunst # notification
+    libnotify
+
+    rofi
   ];
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
-
-  programs.hyprland.enable = true; # enable Hyprland
-  # Optional, hint Electron apps to use Wayland:
-  environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
   # Enable the VS Code server helper
   services.vscode-server.enable = true;
@@ -84,10 +84,31 @@
     LC_TIME = "de_DE.UTF-8";
   };
 
+  xdg.portal.enable = true;
+  xdg.portal.extraPortals = [
+    pkgs.xdg-desktop-portal-hyprland
+    pkgs.xdg-desktop-portal-gtk
+  ];
 
-  # Enable OpenGL
-  hardware.graphics = {
+  programs.hyprland = {
     enable = true;
+    xwayland.enable = true;
+  };
+
+  environment.sessionVariables =  {
+    # if your cursor becomes invisible
+    # WLR_NO_HARDWARE_CURSORS = "1";
+
+    # hint Electron apps to use Wayland
+    NIXOS_OZONE_WL = "1";
+  };
+
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
+
+  hardware = {
+    # Enable OpenGL
+    graphics.enable = true;
   };
 
   # Load nvidia driver for Xorg and Wayland
@@ -124,20 +145,24 @@
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
-
+  programs.waybar.enable = true;
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
+  services.xserver.displayManager.sddm.enable = true;  
+
+  # services.displayManager.sddm.enable = true;
+  # services.displayManager.sddm.wayland.enable = true;
 
   # Enable the Cinnamon Desktop Environment.
-  services.xserver.displayManager.lightdm.enable = true;
-  services.xserver.desktopManager.cinnamon.enable = true;
+  # services.xserver.displayManager.lightdm.enable = true;
+  # services.xserver.desktopManager.cinnamon.enable = true;
 
   # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
+  # services.xserver.xkb = {
+  #   layout = "us";
+  #   variant = "";
+  # };
 
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
@@ -169,10 +194,9 @@
     # Admin
     lowm4n = {
       isNormalUser = true;
-      description = "LowM4N Admin";
+      description = "LowM4N";
       extraGroups = ["docker" "wheel" "networkmanager"];
-      # shell = pkgs.fish;
-      shell = pkgs.bashInteractive;
+      # shell = pkgs.bashInteractive;
       hashedPassword = "$y$j9T$zKVMZna.IIvgengXVjppm.$ZnAjitNKQssZQzuyKX413Jct2bVpRuqeHZBUAmgYy31"; # or set to "!" to lock password
       openssh.authorizedKeys.keys = [
         "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC7PcPvy917XSLd/qqWUT4nHT9ML6tn/zVfbMTcAbQ9ztKGRYDLoHnKIBpIGnOJxeBQ7tHtp3r5oG3h0vatJM0+E8psJElw1Bx8iTjMD3m6bZ/l9lJmJ5tAEv8C+9n0nJ9NuzgSSbmscxutxxU8p0DpmsnIUMaByTL/1f3bB/tddOO0KFiWPKLx8bIhB0SDL6iix7dXPbvthijYj8sXkSUyNfE7jfwFHZJQz1DUg/qc9ggrrkWpvwKDPuF4kCTO2punp7VpxYAvlgYpVjK2H5qUw0dYslSoCFB3CFfd+uKFaVEgTwH36yBLspgafMQ7Df3ujBAqB/nhvRsnJ44KXZn+k9MVEcDjmjOUDTmZ1rmjWXSOrIVO+QukpCSCji9azXOBJzHe4KWziJ1dYprEYzpbVRCk67VFCZ2Y0ybmbeHzStJOGTPRXZCMzM97FwxmResEOH8Lmww3UQis7Vb0VUvVyW6RxoXb1Sbgj3C0N7HO3LwxTuga1jOZgshJ+s8ZR3JBwtrJjWHxFHClJEAUgdSHkClQ+sbL2Ii9df4e43S30dCEGVpw5HY3TYvvo7UYOEdUoYvlc9CYE+d5s+ka5bFA/Frc0YPlPojwy5CttnWKN1JM3HACx471vKufsNMTQHlspDAFtrl6rHUX6F4vMvPyC34kgR2xG4chuSzybmJcsQ== lowm4n@JARVIS.local"
