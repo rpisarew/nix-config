@@ -6,6 +6,7 @@
     ./hardware-configuration.nix
     flake.modules.nixos.docker
     flake.modules.nixos.ssh
+    flake.modules.nixos.steam
     inputs.vscode-server.nixosModules.default
   ];
 
@@ -158,9 +159,6 @@
   services.xserver.enable = true;
   services.displayManager.sddm.enable = true;  
 
-  # services.displayManager.sddm.enable = true;
-  # services.displayManager.sddm.wayland.enable = true;
-
   # Enable the Cinnamon Desktop Environment.
   # services.xserver.displayManager.lightdm.enable = true;
   # services.xserver.desktopManager.cinnamon.enable = true;
@@ -231,15 +229,6 @@
 
   # Install firefox.
   programs.firefox.enable = true;
-
-  # programs.gamescope.enable = true;
-  # programs.gamemode.enable = true;
-  # programs.steam = {
-  #   enable = true;
-  #   remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-  #   dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-  #   localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
-  # };
 
   users.users = {
     # Admin
