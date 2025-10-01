@@ -3,6 +3,7 @@
 
   # Add all your dependencies here
   inputs = {
+    #nixpkgs.url = "github:NixOS/nixpkgs/24.05";
     nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
 
     blueprint.url = "github:numtide/blueprint";

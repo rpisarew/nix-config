@@ -1,7 +1,16 @@
 { pkgs, ... }:
 {
   # Home Manager basics
-  home.stateVersion = "24.11"; # match your HM release
+  home.stateVersion = "24.05"; # match your HM release
+
+  # Declarative cursor config that updates GTK & X11
+  home.pointerCursor = {
+    name = "Bibata-Modern-Classic";  # or "Adwaita"
+    package = pkgs.bibata-cursors;
+    size = 24;
+    gtk.enable = true;  # writes gtk settings
+    x11.enable = true;  # sets X cursor symlink
+  };
 
   gtk = {
     enable = true;
@@ -13,7 +22,7 @@
 
   qt = {
     enable = true;
-    platformTheme = "gtk";
+    platformTheme.name = "gtk";
     style.name = "kvantum";
   };
 
@@ -31,21 +40,12 @@
   programs.starship.enable = true;
 
   # Useful CLI apps (user-scoped)
-  home.packages = with pkgs; [ ripgrep fd bat ];
+  home.packages = with pkgs; [ bibata-cursors ripgrep fd bat ];
 
   # Git defaults
   programs.git = {
     enable = true;
     userName = "Foo Bar";
     userEmail = "foo@bar.com";
-  };
-
-  # SSH client config (optional tweaks)
-  programs.ssh = {
-    enable = true;
-    matchBlocks."*".extraOptions = {
-      ServerAliveInterval = "30";
-      ServerAliveCountMax = "3";
-    };
   };
 }
