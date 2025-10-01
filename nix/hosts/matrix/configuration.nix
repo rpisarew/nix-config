@@ -98,6 +98,11 @@
   };
 
   environment.sessionVariables =  {
+    WLR_NO_HARDWARE_CURSORS = "1";          # common fix for wlroots+NVIDIA blank/black issues
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";   # makes Xwayland GL unambiguous
+    LIBVA_DRIVER_NAME = "nvidia";           # not required for the game, avoids video/launcher oddities
+    __GL_VRR_ALLOWED = "0";                 # optional: avoids some black screens on VRR displays
+
     # if your cursor becomes invisible
     # WLR_NO_HARDWARE_CURSORS = "1";
 
@@ -186,9 +191,9 @@
           t = "C-t";  # new tab
           n = "C-n";  # new window (many apps)
           q = "C-q";  # quit (works in many apps; see caution below)
-          f = "C-f";  # find
-          g = "C-g";  # find next (varies by app)
-          p = "C-p";  # print
+          # f = "C-f";  # find
+          # g = "C-g";  # find next (varies by app)
+          # p = "C-p";  # print
           w = "C-w";  # close tab (⚠️ see note)
         };
 
@@ -227,12 +232,14 @@
   # Install firefox.
   programs.firefox.enable = true;
 
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-    localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
-  };
+  # programs.gamescope.enable = true;
+  # programs.gamemode.enable = true;
+  # programs.steam = {
+  #   enable = true;
+  #   remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+  #   dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+  #   localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
+  # };
 
   users.users = {
     # Admin
