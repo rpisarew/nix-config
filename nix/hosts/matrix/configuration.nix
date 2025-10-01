@@ -151,7 +151,7 @@
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
-  services.xserver.displayManager.sddm.enable = true;  
+  services.displayManager.sddm.enable = true;  
 
   # services.displayManager.sddm.enable = true;
   # services.displayManager.sddm.wayland.enable = true;
@@ -179,12 +179,17 @@
           c = "C-c";  # copy
           v = "C-v";  # paste
 
-          # optional mac-like extras:
           x = "C-x";  # cut
           z = "C-z";  # undo
           a = "C-a";  # select all
           s = "C-s";  # save
           t = "C-t";  # new tab
+          n = "C-n";  # new window (many apps)
+          q = "C-q";  # quit (works in many apps; see caution below)
+          f = "C-f";  # find
+          g = "C-g";  # find next (varies by app)
+          p = "C-p";  # print
+          w = "C-w";  # close tab (⚠️ see note)
         };
 
         # Optional: while holding Super+Shift, use terminal-friendly shortcuts too
@@ -205,7 +210,6 @@
   # '';
 
   # Enable sound with pipewire.
-  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -213,7 +217,7 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
+    jack.enable = true;
 
     # use the example session manager (no others are packaged yet so this is enabled by default,
     # no need to redefine it in your config for now)
