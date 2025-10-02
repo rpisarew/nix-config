@@ -10,6 +10,9 @@
     inputs.vscode-server.nixosModules.default
   ];
 
+  # Kernel & hardware defaults
+  system.stateVersion = "25.05"; # set to your installed release
+
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -23,13 +26,20 @@
 
   time.timeZone = "Europe/Berlin";
 
+  # 24.05
+  # fonts.packages = with pkgs; [
+  #   (nerdfonts.override {
+  #     fonts = [
+  #       "FiraCode"
+  #       "FiraMono"
+  #     ];
+  #   })
+  # ];
+  # 24.11
   fonts.packages = with pkgs; [
     nerd-fonts.fira-mono
     nerd-fonts.fira-code
   ];
-
-  # Kernel & hardware defaults
-  system.stateVersion = "24.11"; # set to your installed release
 
   # Packages available system-wide (keep this small; prefer Home Manager for apps)
   environment.systemPackages = with pkgs; [

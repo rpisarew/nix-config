@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   # Home Manager basics
-  home.stateVersion = "24.05"; # match your HM release
+  home.stateVersion = "25.05"; # match your HM release
 
   # Declarative cursor config that updates GTK & X11
   home.pointerCursor = {
