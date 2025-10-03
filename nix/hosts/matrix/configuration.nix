@@ -183,7 +183,7 @@ security.polkit.enable = true;
           # f = "C-f";  # find
           # g = "C-g";  # find next (varies by app)
           # p = "C-p";  # print
-          # w = "C-w";  # close tab (⚠️ see note)
+          w = "C-w";  # close tab (⚠️ see note)
         };
 
         # Optional: while holding Super+Shift, use terminal-friendly shortcuts too
