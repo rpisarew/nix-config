@@ -40,7 +40,15 @@ in
   };
 
   # Shell / prompt
-  programs.fish.enable = true;
+  programs.fish = {
+    enable = true;
+    shellAbbrs = {
+      dco = "docker-compose";
+      dcu = "docker-compose up -d";
+      dcd = "docker-compose down";
+      dcl = "docker-compose logs";
+    };
+  };
   programs.bash = {
     enable = true;
     # Runs for interactive bash
@@ -50,7 +58,6 @@ in
       fi
     '';
   };
-  programs.starship.enable = true;
 
   home.packages =
     (with pkgs; [
@@ -69,5 +76,37 @@ in
     enable = true;
     userName = "Foo Bar";
     userEmail = "foo@bar.com";
+  };
+
+  programs.atuin = {
+    enable = true;
+    enableFishIntegration = true;
+  };
+
+  programs.zoxide = {
+    enable = true;
+    enableFishIntegration = true;
+  };
+
+  programs.zellij = {
+    enable = true;
+    enableFishIntegration = true;
+    exitShellOnExit = true;
+  };
+
+  programs.starship = {
+    enable = true;
+    enableInteractive = true;
+    enableFishIntegration = true;
+  };
+
+  programs.eza = {
+    enable = true;
+    enableFishIntegration = true;
+    icons = "always";
+  };
+
+  programs.bat = {
+    enable = true;
   };
 }

@@ -54,17 +54,12 @@ in
     curl
     which
 
-    atuin
     btop
-    bat
     ripgrep
-    zoxide
     git
     neovim
     wget
-    starship
     wezterm
-    zellij
 
     spotify
     discord
@@ -183,12 +178,12 @@ security.polkit.enable = true;
           a = "C-a";  # select all
           s = "C-s";  # save
           t = "C-t";  # new tab
-          n = "C-n";  # new window (many apps)
+          # n = "C-n";  # new window (many apps)
           # q = "C-q";  # quit (works in many apps; see caution below)
           # f = "C-f";  # find
           # g = "C-g";  # find next (varies by app)
           # p = "C-p";  # print
-          w = "C-w";  # close tab (⚠️ see note)
+          # w = "C-w";  # close tab (⚠️ see note)
         };
 
         # Optional: while holding Super+Shift, use terminal-friendly shortcuts too
